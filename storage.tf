@@ -6,3 +6,12 @@ resource "google_storage_bucket" "test_bucket" {
 
   public_access_prevention = "enforced"
 }
+
+resource "google_storage_bucket" "test_bucket1" {
+  name          = "densnet-test-bucket1-${terraform.workspace}"
+  location      = upper(var.region)
+  storage_class = "STANDARD"
+  project = var.project[terraform.workspace]
+
+  public_access_prevention = "enforced"
+}
