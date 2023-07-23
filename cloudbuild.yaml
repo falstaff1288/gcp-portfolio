@@ -6,10 +6,10 @@ steps:
   - '-c'
   - |
       # if [ -n "$_BASE_BRANCH" ]; then
-      #   _BRANCH=$_BASE_BRANCH
-      # else
-      #   _BRANCH=$BRANCH_NAME
-      # fi
+        _BRANCH=$_BASE_BRANCH
+      else
+        _BRANCH=$BRANCH_NAME
+      fi
       echo "Hello $_BASE_BRANCH & $_BRANCH"
       case "$_BRANCH" in
         "dev")
