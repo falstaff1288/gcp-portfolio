@@ -15,7 +15,7 @@ steps:
   args: 
   - '-c'
   - |
-      # set -x
+      set -x
       if [ -n "$_BASE_BRANCH" ]; then
         echo "Base branch: $_BASE_BRANCH"
         case "$_BASE_BRANCH" in
