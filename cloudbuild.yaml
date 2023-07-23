@@ -6,24 +6,35 @@ steps:
   - '-c'
   - |
       set -x
-      # if [ -n "$_BASE_BRANCH" ]; then
-      #   _BRANCH=$_BASE_BRANCH
-      # else
-      #   _BRANCH=$BRANCH_NAME
-      # fi
-      echo "Hello $_BASE_BRANCH & $BRANCH_NAME"
-      case "$_BASE_BRANCH" in
-        "dev")
-          terraform workspace select dev
-          terraform init
-        ;;
-        "main")
-          terraform workspace select prod
-          terraform init
-        ;;
-        *)
-        ;;
-      esac
+      if [ -n "$_BASE_BRANCH" ]; then
+        echo "Base branch: $_BASE_BRANCH"
+        case "$_BASE_BRANCH" in
+          "dev")
+            terraform workspace select dev
+            terraform init
+          ;;
+          "main")
+            terraform workspace select prod
+            terraform init
+          ;;
+          *)
+          ;;
+        esac
+      else
+        echo "Branch name: $BRANCH_NAME"
+        case "$BRANCH_NAME" in
+          "dev")
+            terraform workspace select dev
+            terraform init
+          ;;
+          "main")
+            terraform workspace select prod
+            terraform init
+          ;;
+          *)
+          ;;
+        esac
+      fi
 
 # [START tf-plan]
 - id: 'tf plan'
