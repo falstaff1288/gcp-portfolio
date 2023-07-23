@@ -19,7 +19,6 @@ steps:
           terraform init
         ;;
       esac
-      
 
 # [START tf-plan]
 - id: 'tf plan'
@@ -51,7 +50,7 @@ steps:
   args: 
   - '-c'
   - | 
-      if [[ "$BRANCH_NAME" =~ ^(main|dev)$ ]]; then 
+      if [ "$BRANCH_NAME" =~ ^(main|dev)$ ]; then 
         terraform workspace select prod
         terraform apply -input=false /workspace/tfplan
       else
