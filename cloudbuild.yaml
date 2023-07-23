@@ -5,7 +5,7 @@ steps:
   args: 
   - '-c'
   - |
-      case $_BASE_BRANCH in
+      case $BRANCH_NAME in
         "dev")
           terraform workspace select dev
           terraform init
@@ -27,7 +27,7 @@ steps:
   args: 
   - '-c'
   - | 
-      case $_BASE_BRANCH in
+      case $BRANCH_NAME in
         "dev")
           terraform workspace select dev
           terraform plan -out=/workspace/tfplan -input=false
