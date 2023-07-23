@@ -58,14 +58,15 @@ steps:
         case $BRANCH_NAME in
           "dev")
             terraform workspace select dev
+            terraform apply -input=false /workspace/tfplan
           ;;
           "main")
             terraform workspace select prod
+            terraform apply -input=false /workspace/tfplan
           ;;
           *)
           ;;
         esac
-        terraform apply -input=false /workspace/tfplan
       else
         echo "Branch is not main or dev. No action taken."
       fi
