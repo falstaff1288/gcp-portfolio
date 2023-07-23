@@ -5,20 +5,22 @@ steps:
   args: 
   - '-c'
   - |
-      case $BRANCH_NAME in
-        "dev")
-          terraform workspace select dev
-          terraform init
-         ;;
-        "main")
-          terraform workspace select prod
-          terraform init
-         ;;
-        *)
-          terraform workspace select dev
-          terraform init
-        ;;
-      esac
+      if [ ! -n "${_BASE_BRANCH+1}" ]; then
+        case $_BASE_BRANCH in
+          "dev")
+            terraform workspace select dev
+            terraform init
+          ;;
+          "main")
+            terraform workspace select prod
+            terraform init
+          ;;
+          *)
+          ;;
+        esac
+      else
+          echo "No action to take"  
+      fi
 
 # [START tf-plan]
 - id: 'tf plan'
@@ -65,4 +67,4 @@ steps:
       else
         echo "Branch is not main or dev. No action taken."
       fi
-# [END tf-apply]      
+# [END tf-apply]
