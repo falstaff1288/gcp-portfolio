@@ -5,13 +5,13 @@ steps:
   args: 
   - '-c'
   - |
-      if [ -n "$_BASE_BRANCH" ]; then
-        _BRANCH=$_BASE_BRANCH
-      else
-        _BRANCH=$BRANCH_NAME
-      fi
+      # if [ -n "$_BASE_BRANCH" ]; then
+      #   _BRANCH=$_BASE_BRANCH
+      # else
+      #   _BRANCH=$BRANCH_NAME
+      # fi
       echo "Hello $_BASE_BRANCH & $_BRANCH"
-      case $_BRANCH in
+      case "$_BRANCH" in
         "dev")
           terraform workspace select dev
           terraform init
@@ -31,12 +31,12 @@ steps:
   args: 
   - '-c'
   - |
-      if [ -n "$_BASE_BRANCH" ]; then
-        _BRANCH=$_BASE_BRANCH
-      else
-        _BRANCH=$BRANCH_NAME
-      fi
-      case $_BRANCH in
+      # if [ -n "$_BASE_BRANCH" ]; then
+      #   _BRANCH=$_BASE_BRANCH
+      # else
+      #   _BRANCH=$BRANCH_NAME
+      # fi
+      case "$_BASE_BRANCH" in
         "dev")
           terraform workspace select dev
           terraform plan -out=/workspace/tfplan -input=false
