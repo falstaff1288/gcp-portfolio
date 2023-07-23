@@ -1,6 +1,6 @@
 resource "google_storage_bucket" "test_bucket" {
   name          = "densnet-test-bucket"
-  location      = upper(var.region[terraform.workspace])
+  location      = upper(var.region)
   storage_class = "STANDARD"
   project = var.project[terraform.workspace]
 
