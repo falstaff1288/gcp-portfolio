@@ -5,36 +5,9 @@ steps:
   args: 
   - '-c'
   - |
-      # set -x
-      if [ -n "$_BASE_BRANCH" ]; then
-        echo "Base branch: $_BASE_BRANCH"
-        case "$_BASE_BRANCH" in
-          "dev")
-            terraform workspace select dev
-            terraform init
-          ;;
-          "main")
-            terraform workspace select prod
-            terraform init
-          ;;
-          *)
-          ;;
-        esac
-      else
-        echo "Branch name: $BRANCH_NAME"
-        case "$BRANCH_NAME" in
-          "dev")
-            terraform workspace select dev
-            terraform init
-          ;;
-          "main")
-            terraform workspace select prod
-            terraform init
-          ;;
-          *)
-          ;;
-        esac
-      fi
+      terraform init
+      terraform validate
+
 # [START tf-plan]
 - id: 'tf plan'
   name: 'hashicorp/terraform:1.5'
