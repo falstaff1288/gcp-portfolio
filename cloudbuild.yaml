@@ -15,7 +15,8 @@ steps:
           terraform init
          ;;
         *)
-          echo "Not dev or main branch. Skipping."
+          terraform workspace select dev
+          terraform init
         ;;
       esac
       
@@ -37,7 +38,8 @@ steps:
           terraform plan -out=/workspace/tfplan -input=false
          ;;
         *)
-          echo "Not dev or main branch. Skipping."
+          terraform workspace select dev
+          terraform plan -out=/workspace/tfplan -input=false
         ;;
       esac     
 # [END tf-plan]
