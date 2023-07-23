@@ -5,7 +5,7 @@ steps:
   args: 
   - '-c'
   - |
-      terraform init -input=false
+      terraform init -input=false -no-color
       terraform validate
 
 # [START tf-plan]
@@ -21,11 +21,11 @@ steps:
         case "$_BASE_BRANCH" in
           "dev")
             terraform workspace select dev
-            terraform plan -out=/workspace/tfplan -input=false
+            terraform plan -out=/workspace/tfplan -input=false -no-color
           ;;
           "main")
             terraform workspace select prod
-            terraform plan -out=/workspace/tfplan -input=false
+            terraform plan -out=/workspace/tfplan -input=false -no-color
           ;;
           *)
           ;;
@@ -35,11 +35,11 @@ steps:
         case "$BRANCH_NAME" in
           "dev")
             terraform workspace select dev
-            terraform plan -out=/workspace/tfplan -input=false
+            terraform plan -out=/workspace/tfplan -input=false -no-color
           ;;
           "main")
             terraform workspace select prod
-            terraform plan -out=/workspace/tfplan -input=false
+            terraform plan -out=/workspace/tfplan -input=false -no-color
           ;;
           *)
             echo "Branch is not main or dev. No action taken."
@@ -63,12 +63,12 @@ steps:
               echo "Not applying dev"
             else
               terraform workspace select dev
-              terraform apply -input=false /workspace/tfplan
+              terraform apply -input=false /workspace/tfplan -no-color
             fi
           ;;
           "main")
             terraform workspace select prod
-            terraform apply -input=false /workspace/tfplan
+            terraform apply -input=false /workspace/tfplan -no-color
           ;;
           *)
           ;;
