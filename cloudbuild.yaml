@@ -5,6 +5,7 @@ steps:
   args: 
   - '-c'
   - |
+      echo "Base branch: ${_BASE_BRANCH}"
       if [ -n "${_BASE_BRANCH+1}" ]; then
         case $_BASE_BRANCH in
           "dev")
