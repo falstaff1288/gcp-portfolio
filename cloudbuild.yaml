@@ -5,7 +5,7 @@ steps:
   args: 
   - '-c'
   - |
-      if [[ -n $_BASE_BRANCH ]]; then
+      if [[ -z $_BASE_BRANCH ]]; then
         echo "Not a PR merging to dev or main branch. Skipping."
       else
         case $BRANCH_NAME in
@@ -30,7 +30,7 @@ steps:
   args: 
   - '-c'
   - | 
-      if [[ -n $_BASE_BRANCH ]]; then
+      if [[ -z $_BASE_BRANCH ]]; then
         echo "Not a PR merging to dev or main branch. Skipping."
       else
         case $BRANCH_NAME in
