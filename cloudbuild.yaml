@@ -33,16 +33,13 @@ steps:
       else
         echo "Branch name: $BRANCH_NAME"
         case "$BRANCH_NAME" in
-          "dev")
-            terraform workspace select dev
-            terraform plan -out=/workspace/tfplan -input=false -no-color
-          ;;
           "main")
             terraform workspace select prod
             terraform plan -out=/workspace/tfplan -input=false -no-color
           ;;
           *)
-            echo "Branch is not main or dev. No action taken."
+            terraform workspace select dev
+            terraform plan -out=/workspace/tfplan -input=false -no-color
           ;;
         esac
       fi
@@ -56,23 +53,12 @@ steps:
   - '-c'
   - |
       # set -x
-      if [[ "$BRANCH_NAME" == main ]] || [[ "$BRANCH_NAME" == dev ]]; then 
-        case "$BRANCH_NAME" in
-          "dev")
-            if [ -n "$_BASE_BRANCH" ] && [ "$_BASE_BRANCH" == "main" ]; then
-              echo "Not applying dev"
-            else
-              terraform workspace select dev
-              terraform apply -input=false /workspace/tfplan -no-color
-            fi
-          ;;
-          "main")
+      if [[ "$BRANCH_NAME" == dev ]]; then
+          terraform workspace select dev
+          terraform apply -input=false /workspace/tfplan -no-color
+      elif =[ "$BRANCH_NAME" == "main" ]; then
             terraform workspace select prod
             terraform apply -input=false /workspace/tfplan -no-color
-          ;;
-          *)
-          ;;
-        esac
       else
         echo "Branch is not main or dev. No action taken."
       fi
