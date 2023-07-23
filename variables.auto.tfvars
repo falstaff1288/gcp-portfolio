@@ -1,8 +1,4 @@
-variable "project" {
-    dev = {
-        name = "densnet-portfolio-dev"
-    }
-    prod = {
-        name = "densnet-portfolio-prod"
-    } 
+project = {
+    dev = "densnet-portfolio-dev"
+    prod ="densnet-portfolio-prod"
 }
