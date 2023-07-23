@@ -5,22 +5,19 @@ steps:
   args: 
   - '-c'
   - |
-      if [[ -z ${_BASE_BRANCH+x} ]]; then
-        echo "Not a PR merging to dev or main branch. Skipping."
-      else
-        case $BRANCH_NAME in
-          "dev")
-            terraform workspace select dev
-            terraform init
-          ;;
-          "main")
-            terraform workspace select prod
-            terraform init
-          ;;
-          *)
-          ;;
-        esac
-      fi
+      case $BRANCH_NAME in
+        "dev")
+          terraform workspace select dev
+          terraform init
+         ;;
+        "main")
+          terraform workspace select prod
+          terraform init
+         ;;
+        *)
+          echo "Not dev or main branch. Skipping."
+        ;;
+      esac
       
 
 # [START tf-plan]
@@ -30,22 +27,19 @@ steps:
   args: 
   - '-c'
   - | 
-      if [[ -z ${_BASE_BRANCH+x} ]]; then
-        echo "Not a PR merging to dev or main branch. Skipping."
-      else
-        case $BRANCH_NAME in
-          "dev")
-            terraform workspace select dev
-            terraform plan -out=/workspace/tfplan -input=false
-          ;;
-          "main")
-            terraform workspace select prod
-            terraform plan -out=/workspace/tfplan -input=false
-          ;;
-          *)
-          ;;
-        esac     
-      fi
+      case $BRANCH_NAME in
+        "dev")
+          terraform workspace select dev
+          terraform plan -out=/workspace/tfplan -input=false
+         ;;
+        "main")
+          terraform workspace select prod
+          terraform plan -out=/workspace/tfplan -input=false
+         ;;
+        *)
+          echo "Not dev or main branch. Skipping."
+        ;;
+      esac     
 # [END tf-plan]
 
 # [START tf-apply]
