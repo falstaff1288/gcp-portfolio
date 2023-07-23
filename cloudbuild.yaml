@@ -5,8 +5,10 @@ steps:
   args: 
   - '-c'
   - |
+      set -x
       if [ -n "$_BASE_BRANCH" ]; then
-        case $_BASE_BRANCH in
+        echo "Base branch: $_BASE_BRANCH"
+        case "$_BASE_BRANCH" in
           "dev")
             terraform workspace select dev
             terraform init
@@ -19,9 +21,20 @@ steps:
           ;;
         esac
       else
-          echo "No action to take"  
+        echo "Branch name: $BRANCH_NAME"
+        case "$BRANCH_NAME" in
+          "dev")
+            terraform workspace select dev
+            terraform init
+          ;;
+          "main")
+            terraform workspace select prod
+            terraform init
+          ;;
+          *)
+          ;;
+        esac
       fi
-
 # [START tf-plan]
 - id: 'tf plan'
   name: 'hashicorp/terraform:1.5'
@@ -29,8 +42,10 @@ steps:
   args: 
   - '-c'
   - |
+      set -x
       if [ -n "$_BASE_BRANCH" ]; then
-        case $_BASE_BRANCH in
+        echo "Base branch: $_BASE_BRANCH"
+        case "$_BASE_BRANCH" in
           "dev")
             terraform workspace select dev
             terraform plan -out=/workspace/tfplan -input=false
@@ -43,8 +58,20 @@ steps:
           ;;
         esac
       else
-          echo "No action to take"  
-      fi   
+        echo "Branch name: $BRANCH_NAME"
+        case "$BRANCH_NAME" in
+          "dev")
+            terraform workspace select dev
+            terraform plan -out=/workspace/tfplan -input=false
+          ;;
+          "main")
+            terraform workspace select prod
+            terraform plan -out=/workspace/tfplan -input=false
+          ;;
+          *)
+          ;;
+        esac
+      fi
 # [END tf-plan]
 
 # [START tf-apply]
