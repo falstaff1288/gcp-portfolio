@@ -6,21 +6,22 @@ steps:
   - '-c'
   - |
       if [ -n "$_BASE_BRANCH" ]; then
-        case $_BASE_BRANCH in
-          "dev")
-            terraform workspace select dev
-            terraform init
-          ;;
-          "main")
-            terraform workspace select prod
-            terraform init
-          ;;
-          *)
-          ;;
-        esac
+        BRANCH=$_BASE_BRANCH
       else
-          echo "No action to take"  
+        BRANCH=$BRANCH_NAME
       fi
+      case $BRANCH in
+        "dev")
+          terraform workspace select dev
+          terraform init
+        ;;
+        "main")
+          terraform workspace select prod
+          terraform init
+        ;;
+        *)
+        ;;
+      esac
 
 # [START tf-plan]
 - id: 'tf plan'
@@ -30,21 +31,22 @@ steps:
   - '-c'
   - |
       if [ -n "$_BASE_BRANCH" ]; then
-        case $_BASE_BRANCH in
-          "dev")
-            terraform workspace select dev
-            terraform plan -out=/workspace/tfplan -input=false
-          ;;
-          "main")
-            terraform workspace select prod
-            terraform plan -out=/workspace/tfplan -input=false
-          ;;
-          *)
-          ;;
-        esac
+        BRANCH=$_BASE_BRANCH
       else
-          echo "No action to take"  
-      fi   
+        BRANCH=$BRANCH_NAME
+      fi
+      case $BRANCH in
+        "dev")
+          terraform workspace select dev
+          terraform plan -out=/workspace/tfplan -input=false
+        ;;
+        "main")
+          terraform workspace select prod
+          terraform plan -out=/workspace/tfplan -input=false
+        ;;
+        *)
+        ;;
+      esac 
 # [END tf-plan]
 
 # [START tf-apply]
