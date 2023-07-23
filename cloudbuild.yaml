@@ -5,6 +5,7 @@ steps:
   args: 
   - '-c'
   - |
+      set -x
       # if [ -n "$_BASE_BRANCH" ]; then
       #   _BRANCH=$_BASE_BRANCH
       # else
