@@ -15,7 +15,7 @@ steps:
   args: 
   - '-c'
   - |
-      set -x
+      # set -x
       if [ -n "$_BASE_BRANCH" ]; then
         echo "Base branch: $_BASE_BRANCH"
         case "$_BASE_BRANCH" in
@@ -56,7 +56,7 @@ steps:
       if [[ "$BRANCH_NAME" == dev ]]; then
           terraform workspace select dev
           terraform apply -input=false /workspace/tfplan -no-color
-      elif =[ "$BRANCH_NAME" == "main" ]; then
+      elif [ "$BRANCH_NAME" == "main" ]; then
             terraform workspace select prod
             terraform apply -input=false /workspace/tfplan -no-color
       else
