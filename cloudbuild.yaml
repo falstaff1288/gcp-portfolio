@@ -6,11 +6,11 @@ steps:
   - '-c'
   - |
       if [ -n "$_BASE_BRANCH" ]; then
-        BRANCH=$_BASE_BRANCH
+        _BRANCH=$_BASE_BRANCH
       else
-        BRANCH=$BRANCH_NAME
+        _BRANCH=$BRANCH_NAME
       fi
-      case $BRANCH in
+      case $_BRANCH in
         "dev")
           terraform workspace select dev
           terraform init
@@ -31,11 +31,11 @@ steps:
   - '-c'
   - |
       if [ -n "$_BASE_BRANCH" ]; then
-        BRANCH=$_BASE_BRANCH
+        _BRANCH=$_BASE_BRANCH
       else
-        BRANCH=$BRANCH_NAME
+        _BRANCH=$BRANCH_NAME
       fi
-      case $BRANCH in
+      case $_BRANCH in
         "dev")
           terraform workspace select dev
           terraform plan -out=/workspace/tfplan -input=false
