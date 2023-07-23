@@ -83,9 +83,7 @@ steps:
   - |
       set -x
       if [[ "$BRANCH_NAME" == main ]] || [[ "$BRANCH_NAME" == dev ]]; then 
-        case "$BRANCH_NAME" in
-          "dev")
-            if [ -n "$_BASE_BRANCH" ] && if [ "$_BASE_BRANCH" == "main" ]; then
+            if [ -n "$_BASE_BRANCH" ] && [ "$_BASE_BRANCH" == "main" ]; then
               echo "Not applying dev"
             else
               terraform workspace select dev
