@@ -5,42 +5,73 @@ steps:
   args: 
   - '-c'
   - |
-      case $BRANCH_NAME in
-        "dev")
-          terraform workspace select dev
-          terraform init
-         ;;
-        "main")
-          terraform workspace select prod
-          terraform init
-         ;;
-        *)
-          terraform workspace select dev
-          terraform init
-        ;;
-      esac
-
+      set -x
+      if [ -n "$_BASE_BRANCH" ]; then
+        echo "Base branch: $_BASE_BRANCH"
+        case "$_BASE_BRANCH" in
+          "dev")
+            terraform workspace select dev
+            terraform init
+          ;;
+          "main")
+            terraform workspace select prod
+            terraform init
+          ;;
+          *)
+          ;;
+        esac
+      else
+        echo "Branch name: $BRANCH_NAME"
+        case "$BRANCH_NAME" in
+          "dev")
+            terraform workspace select dev
+            terraform init
+          ;;
+          "main")
+            terraform workspace select prod
+            terraform init
+          ;;
+          *)
+          ;;
+        esac
+      fi
 # [START tf-plan]
 - id: 'tf plan'
   name: 'hashicorp/terraform:1.5'
   entrypoint: 'sh'
   args: 
   - '-c'
-  - | 
-      case $BRANCH_NAME in
-        "dev")
-          terraform workspace select dev
-          terraform plan -out=/workspace/tfplan -input=false
-         ;;
-        "main")
-          terraform workspace select prod
-          terraform plan -out=/workspace/tfplan -input=false
-         ;;
-        *)
-          terraform workspace select dev
-          terraform plan -out=/workspace/tfplan -input=false
-        ;;
-      esac     
+  - |
+      set -x
+      if [ -n "$_BASE_BRANCH" ]; then
+        echo "Base branch: $_BASE_BRANCH"
+        case "$_BASE_BRANCH" in
+          "dev")
+            terraform workspace select dev
+            terraform plan -out=/workspace/tfplan -input=false
+          ;;
+          "main")
+            terraform workspace select prod
+            terraform plan -out=/workspace/tfplan -input=false
+          ;;
+          *)
+          ;;
+        esac
+      else
+        echo "Branch name: $BRANCH_NAME"
+        case "$BRANCH_NAME" in
+          "dev")
+            terraform workspace select dev
+            terraform plan -out=/workspace/tfplan -input=false
+          ;;
+          "main")
+            terraform workspace select prod
+            terraform plan -out=/workspace/tfplan -input=false
+          ;;
+          *)
+          ;;
+        esac
+      fi
 # [END tf-plan]
 
 # [START tf-apply]
@@ -49,20 +80,25 @@ steps:
   entrypoint: 'sh'
   args: 
   - '-c'
-  - | 
+  - |
+      set -x
       if [[ "$BRANCH_NAME" == main ]] || [[ "$BRANCH_NAME" == dev ]]; then 
-        case $BRANCH_NAME in
+        case "$BRANCH_NAME" in
           "dev")
-            terraform workspace select dev
+            if [ -n "$_BASE_BRANCH" ] && [ "$_BASE_BRANCH" == "main" ]; then
+              echo "Not applying dev"
+            else
+              terraform workspace select dev
+              terraform apply -input=false /workspace/tfplan
+            fi
           ;;
           "main")
             terraform workspace select prod
+            terraform apply -input=false /workspace/tfplan
           ;;
           *)
           ;;
         esac
-        terraform apply -input=false /workspace/tfplan
       else
         echo "Branch is not main or dev. No action taken."
       fi
-# [END tf-apply]      
