@@ -54,6 +54,6 @@ steps:
         terraform workspace select prod
         terraform apply -input=false /workspace/tfplan
       else
-        echo "Branch is not main. No action taken."
+        echo "Branch is not main or dev. No action taken."
       fi
 # [END tf-apply]      
