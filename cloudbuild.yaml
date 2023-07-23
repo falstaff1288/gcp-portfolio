@@ -10,6 +10,7 @@ steps:
       else
         _BRANCH=$BRANCH_NAME
       fi
+      echo "Hello $_BASE_BRANCH & $_BRANCH"
       case $_BRANCH in
         "dev")
           terraform workspace select dev
