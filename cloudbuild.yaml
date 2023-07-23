@@ -51,7 +51,16 @@ steps:
   - '-c'
   - | 
       if [[ "$BRANCH_NAME" == main ]] || [[ "$BRANCH_NAME" == dev ]]; then 
-        terraform workspace select prod
+        case $BRANCH_NAME in
+          "dev")
+            terraform workspace select dev
+          ;;
+          "main")
+            terraform workspace select prod
+          ;;
+          *)
+          ;;
+        esac
         terraform apply -input=false /workspace/tfplan
       else
         echo "Branch is not main or dev. No action taken."
