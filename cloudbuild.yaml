@@ -6,7 +6,7 @@ steps:
   - '-c'
   - |
       terraform init -input=false -no-color
-      terraform validate
+      terraform validate -no-color
 
 # [START tf-plan]
 - id: 'tf plan'
