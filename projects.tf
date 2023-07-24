@@ -17,6 +17,7 @@ module "project_densnet_shared_vpc_host_test" {
   name              = "densnet-host-vpc-test"
   random_project_id = true
   org_id            = "914921624150"
+  folder_id         = "649529978270"
   #   usage_bucket_name    = "densnet-shared-network-test-usage-report-bucket"
   #   usage_bucket_prefix  = "pf/test/1/integration"
   billing_account                = "017CB9-ECCEBC-A2CCF8"
