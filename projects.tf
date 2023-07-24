@@ -34,7 +34,7 @@ module "shared_vpc_densnet_mgmt" {
     subnets = [
         {
             subnet_name = "${var.project[terraform.workspace]}"
-            sumnet_ip = "10.140.0.0/20"
+            subnet_ip = "10.140.0.0/20"
             subnet_region = "us-central1"
             description = "subnet for applications (${var.project[terraform.workspace]})"
         }
