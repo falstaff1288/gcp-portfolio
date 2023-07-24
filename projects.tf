@@ -29,7 +29,7 @@ module "shared_vpc_densnet_mgmt" {
     depends_on = [ module.project_densnet_shared_vpc_host ]
 
     project_id = module.project_densnet_shared_vpc_host.project_id
-    network_name = "vpc-densnet-apps-${var.project[terraform.workspace]}"
+    network_name = "vpc-densnet-apps-${terraform.workspace}"
 
     subnets = [
         {
@@ -65,7 +65,7 @@ module "projects" {
   svpc_host_project_id = module.project_densnet_shared_vpc_host.project_id
 
     shared_vpc_subnets = [
-      "projects//regions/us-central1/subnetworks/default",
+      "projects/${var.project[terraform.workspace]}/regions/us-central1/subnetworks/default",
     ]
 
 }
