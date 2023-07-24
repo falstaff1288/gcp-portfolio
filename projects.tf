@@ -26,7 +26,7 @@ module "shared_vpc_densnet_mgmt" {
     source  = "terraform-google-modules/network/google"
     version = "~> 7.1"
 
-    depends_on = [ module.module.project_densnet_shared_vpc_host ]
+    depends_on = [ module.project_densnet_shared_vpc_host ]
 
     project_id = module.project_densnet_shared_vpc_host.project_id
     network_name = "vpc-densnet-apps-${var.project[terraform.workspace]}"
