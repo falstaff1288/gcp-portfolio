@@ -34,7 +34,7 @@ module "cloud_router" {
   source  = "terraform-google-modules/cloud-router/google"
   version = "~> 5.0"
 
-  name    = "router-${var.region}"
+  name    = "cloud-router-${var.region}"
   project = module.project_densnet_shared_vpc_host.project_id
   region  = var.region
   network = module.project_densnet_shared_vpc_host.project_name
