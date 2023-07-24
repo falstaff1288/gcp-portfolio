@@ -10,11 +10,11 @@
 #   org_id     = "914921624150"
 # }
 
-module "project_densnet_shared_vpc_host_test" {
+module "project_densnet_shared_vpc_host" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 14.2"
 
-  name              = "densnet-host-vpc-test"
+  name              = "densnet-host-vpc-${terraform.workspace}"
   random_project_id = true
   org_id            = "914921624150"
   folder_id         = "649529978270"
