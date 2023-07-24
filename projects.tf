@@ -14,7 +14,7 @@ module "project_densnet_shared_vpc_host_test" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 14.2"
 
-  name                 = "densnet-shared-vpc-host-test"
+  name                 = "densnet-host-vpc-test"
   random_project_id    = true
   org_id               = "914921624150"
 #   usage_bucket_name    = "densnet-shared-network-test-usage-report-bucket"
