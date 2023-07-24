@@ -40,5 +40,8 @@ module "cloud_router" {
   network = module.shared_vpc_densnet_apps.network_name
   nats = [{
     name = "nat-${var.region}"
+    log_config = {
+        enable = false
+    }
   }]
 }
