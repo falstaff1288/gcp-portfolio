@@ -7,7 +7,7 @@ module "projects" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 14.2"
 
-  depends_on = [ google_folder.apps, module.shared_vpc_densnet_mgmt ]
+  depends_on = [ google_folder.apps, module.shared_vpc_densnet_apps ]
 
   name              = var.project[terraform.workspace]
   random_project_id = true

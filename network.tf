@@ -10,7 +10,7 @@ module "project_densnet_shared_vpc_host" {
   enable_shared_vpc_host_project = true
 }
 
-module "shared_vpc_densnet_mgmt" {
+module "shared_vpc_densnet_apps" {
     source  = "terraform-google-modules/network/google"
     version = "~> 7.1"
 
@@ -37,7 +37,7 @@ module "cloud_router" {
   name    = "cloud-router-${var.region}"
   project = module.project_densnet_shared_vpc_host.project_id
   region  = var.region
-  network = module.project_densnet_shared_vpc_host.subnet_name
+  network = module.shared_vpc_densnet_apps.network_name
   nats = [{
     name = "nat-${var.region}"
     }]
