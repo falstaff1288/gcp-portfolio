@@ -37,7 +37,7 @@ module "cloud_router" {
   name    = "cloud-router-${var.region}"
   project = module.project_densnet_shared_vpc_host.project_id
   region  = var.region
-  network = module.project_densnet_shared_vpc_host.project_name
+  network = module.project_densnet_shared_vpc_host.subnet_name
   nats = [{
     name = "nat-${var.region}"
     }]
