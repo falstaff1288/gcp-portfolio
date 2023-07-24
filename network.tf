@@ -35,7 +35,7 @@ module "cloud_router" {
   version = "~> 5.0"
 
   name    = "cloud-router-${var.region}"
-  project = module.project_densnet_shared_vpc_host.project_id
+  project = module.shared_vpc_densnet_apps.project_id
   region  = var.region
   network = module.shared_vpc_densnet_apps.network_name
   nats = [{
