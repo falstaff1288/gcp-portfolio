@@ -20,6 +20,7 @@ module "project_densnet_shared_vpc_host_test" {
   #   usage_bucket_name    = "densnet-shared-network-test-usage-report-bucket"
   #   usage_bucket_prefix  = "pf/test/1/integration"
   billing_account                = "017CB9-ECCEBC-A2CCF8"
+  enable_shared_vpc_host_project = true
   #   svpc_host_project_id = "shared_vpc_host_name"
 
   #   shared_vpc_subnets = [
