@@ -30,15 +30,15 @@ module "shared_vpc_densnet_apps" {
 }
 
 ### Cloud Router with NAT
-module "cloud_router" {
-  source  = "terraform-google-modules/cloud-router/google"
-  version = "~> 5.0"
+# module "cloud_router" {
+#   source  = "terraform-google-modules/cloud-router/google"
+#   version = "~> 5.0"
 
-  name    = "cloud-router-${var.region}"
-  project = module.shared_vpc_densnet_apps.project_id
-  region  = var.region
-  network = module.shared_vpc_densnet_apps.network_name
-  nats = [{
-    name = "nat-${var.region}"
-    }]
-}
+#   name    = "cloud-router-${var.region}"
+#   project = module.shared_vpc_densnet_apps.project_id
+#   region  = var.region
+#   network = module.shared_vpc_densnet_apps.network_name
+#   nats = [{
+#     name = "nat-${var.region}"
+#     }]
+# }
