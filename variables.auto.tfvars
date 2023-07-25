@@ -9,7 +9,7 @@ project = {
   }
 }
 
-name = "densnet-app"
+name = "densnet"
 # env = "app"
 
 region = "us-central1"

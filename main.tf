@@ -25,6 +25,7 @@ module "project_densnet_app" {
   # service_projects = var.service_projects[terraform.workspace]
   # region = var.region
   name            = var.name
+  env = "apps"
   organization    = var.organization
   folder_id       = module.core.folder_apps_sub_name
   billing_account = var.billing_account

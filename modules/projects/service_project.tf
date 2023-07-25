@@ -2,7 +2,7 @@ module "service_projects" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 14.2"
 
-  name              = var.name
+  name              = "${var.name}-${var.env}-${terraform.workspace}"
   random_project_id = true
   org_id            = var.organization
   folder_id         = var.folder_id
