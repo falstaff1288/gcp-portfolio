@@ -21,3 +21,7 @@ variable "folder_id" {
 variable "name" {
   type = string
 }
+
+variable "grant_network_role" {
+  type = string
+}

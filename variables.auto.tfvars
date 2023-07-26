@@ -1,12 +1,32 @@
 project = {
-  dev = {
-    subnet = "10.140.0.0/20"
-    region = "us-central1"
-  }
-  prod = {
-    subnet = "10.142.0.0/20"
-    region = "us-central1"
-  }
+  dev = [
+    {
+      name   = "apps-dev"
+      env    = "apps"
+      subnet = "10.128.0.0/20"
+      secondary_range = "192.168.16.0/24"
+      region = "us-central1"
+    },
+    {
+      name   = "ml-dev"
+      env    = "ml"
+      subnet = "10.132.0.0/20"
+      secondary_range = "192.168.32.0/24"
+      region = "us-central1"
+    }
+  ]
+  prod = [
+    {
+      name   = "apps-prod"
+      subnet = "10.200.0.0/20"
+      region = "us-central1"
+    },
+    {
+      name   = "ml-prod"
+      subnet = "10.204.0.0/20"
+      region = "us-central1"
+    }
+  ]
 }
 
 name = "densnet"

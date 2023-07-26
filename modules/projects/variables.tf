@@ -17,3 +17,15 @@ variable "billing_account" {
 variable "env" {
   type = string
 }
+
+variable "host_project_id" {
+  type = string
+}
+
+variable "grant_network_role" {
+  type = string
+}
+
+variable "project" {
+  type = any
+}

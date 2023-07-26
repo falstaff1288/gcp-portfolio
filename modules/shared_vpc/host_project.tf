@@ -9,4 +9,10 @@ module "host_project" {
   billing_account                = var.billing_account
   enable_shared_vpc_host_project = true
   lien = false
+  grant_network_role = true
+
+    activate_apis = [
+    "compute.googleapis.com",
+    "cloudresourcemanager.googleapis.com"
+  ]
 }
