@@ -201,94 +201,94 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.gke_deploy.ca_certificate)
 }
 
-module "gke_deploy" {
-  source                     = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
-  project_id                 = module.service_projects_deploy.project_id
-  name                       = "gke-deploy-1"
-  # region                     = "us-central1"
-  regional = false
-  zones                      = ["us-central1-a", "us-central1-b", "us-central1-f"]
-  network                    = module.network_shared_vpc.network_name
-  network_project_id         = module.host_project.project_id
-  subnetwork                 = "densnet-deploy-dev"
-  ip_range_pods              = "densnet-deploy-01"
-  ip_range_services          = "densnet-deploy-02"
-  master_authorized_networks = [
-    {
-      display_name = "allow-all"
-      cidr_block = "0.0.0.0/0"
-    }
-  ]
-  http_load_balancing        = false
-  network_policy             = false
-  horizontal_pod_autoscaling = true
-  filestore_csi_driver       = false
-  enable_private_endpoint    = false
-  enable_private_nodes       = true
-  # master_ipv4_cidr_block     = "10.0.0.0/28"
+# module "gke_deploy" {
+#   source                     = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
+#   project_id                 = module.service_projects_deploy.project_id
+#   name                       = "gke-deploy-1"
+#   # region                     = "us-central1"
+#   regional = false
+#   zones                      = ["us-central1-a", "us-central1-b", "us-central1-f"]
+#   network                    = module.network_shared_vpc.network_name
+#   network_project_id         = module.host_project.project_id
+#   subnetwork                 = "densnet-deploy-dev"
+#   ip_range_pods              = "densnet-deploy-01"
+#   ip_range_services          = "densnet-deploy-02"
+#   master_authorized_networks = [
+#     {
+#       display_name = "allow-all"
+#       cidr_block = "0.0.0.0/0"
+#     }
+#   ]
+#   http_load_balancing        = false
+#   network_policy             = false
+#   horizontal_pod_autoscaling = true
+#   filestore_csi_driver       = false
+#   enable_private_endpoint    = false
+#   enable_private_nodes       = true
+#   # master_ipv4_cidr_block     = "10.0.0.0/28"
 
-  node_pools = [
-    {
-      name                      = "general-nodepool01"
-      machine_type              = "e2-medium"
-      node_locations            = "us-central1-a,us-central1-b,us-central1-c"
-      min_count                 = 1
-      max_count                 = 1
-      local_ssd_count           = 0
-      spot                      = true
-      disk_size_gb              = 100
-      disk_type                 = "pd-standard"
-      image_type                = "COS_CONTAINERD"
-      enable_gcfs               = false
-      enable_gvnic              = false
-      auto_repair               = true
-      auto_upgrade              = true
-      service_account           = module.service_projects_deploy.service_account_email
-      preemptible               = false
-      initial_node_count        = 1
-    },
-  ]
+#   node_pools = [
+#     {
+#       name                      = "general-nodepool01"
+#       machine_type              = "e2-medium"
+#       node_locations            = "us-central1-a,us-central1-b,us-central1-c"
+#       min_count                 = 1
+#       max_count                 = 1
+#       local_ssd_count           = 0
+#       spot                      = true
+#       disk_size_gb              = 100
+#       disk_type                 = "pd-standard"
+#       image_type                = "COS_CONTAINERD"
+#       enable_gcfs               = false
+#       enable_gvnic              = false
+#       auto_repair               = true
+#       auto_upgrade              = true
+#       service_account           = module.service_projects_deploy.service_account_email
+#       preemptible               = false
+#       initial_node_count        = 1
+#     },
+#   ]
 
-  node_pools_oauth_scopes = {
-    all = [
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
-    ]
-  }
+#   node_pools_oauth_scopes = {
+#     all = [
+#       "https://www.googleapis.com/auth/logging.write",
+#       "https://www.googleapis.com/auth/monitoring",
+#     ]
+#   }
 
-  node_pools_labels = {
-    all = {}
+#   node_pools_labels = {
+#     all = {}
 
-    general-nodepool01 = {
-      hello = "moto"
-    }
-  }
+#     general-nodepool01 = {
+#       hello = "moto"
+#     }
+#   }
 
-  # node_pools_metadata = {
-  #   all = {}
+#   # node_pools_metadata = {
+#   #   all = {}
 
-  #   default-node-pool = {
-  #     node-pool-metadata-custom-value = "my-node-pool"
-  #   }
-  # }
+#   #   default-node-pool = {
+#   #     node-pool-metadata-custom-value = "my-node-pool"
+#   #   }
+#   # }
 
-  # node_pools_taints = {
-  #   all = []
+#   # node_pools_taints = {
+#   #   all = []
 
-  #   default-node-pool = [
-  #     {
-  #       key    = "default-node-pool"
-  #       value  = true
-  #       effect = "PREFER_NO_SCHEDULE"
-  #     },
-  #   ]
-  # }
+#   #   default-node-pool = [
+#   #     {
+#   #       key    = "default-node-pool"
+#   #       value  = true
+#   #       effect = "PREFER_NO_SCHEDULE"
+#   #     },
+#   #   ]
+#   # }
 
-  # node_pools_tags = {
-  #   all = []
+#   # node_pools_tags = {
+#   #   all = []
 
-  #   default-node-pool = [
-  #     "default-node-pool",
-  #   ]
-  # }
-}
+#   #   default-node-pool = [
+#   #     "default-node-pool",
+#   #   ]
+#   # }
+# }
