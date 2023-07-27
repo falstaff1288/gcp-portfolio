@@ -44,7 +44,7 @@ module "host_project" {
   name                           = "${var.org_name}-net-${terraform.workspace}"
   random_project_id              = true
   org_id                         = var.organization
-  folder_id                      = "organizations/${var.organization}"
+  folder_id                      = google_folder.shared_vpc_sub.name
   billing_account                = var.billing_account
   enable_shared_vpc_host_project = true
   lien = false
@@ -66,10 +66,8 @@ module "service_projects_apps" {
   org_id            = var.organization
   folder_id         = google_folder.apps_sub.name
   billing_account      = var.billing_account
-  # svpc_host_project_id = var.host_project_id
-  # grant_network_role = var.grant_network_role
 
-  # shared_vpc = var.host_project_id
+  shared_vpc = module.host_project.project_id
   # shared_vpc_subnets = [
   #   "projects/${var.host_project_id}/regions/${var.region}/subnetworks/${var.name}-${var.env}-${terraform.workspace}",
   # ]
@@ -91,10 +89,8 @@ module "service_projects_ml" {
   org_id            = var.organization
   folder_id         = google_folder.apps_sub.name
   billing_account      = var.billing_account
-  # svpc_host_project_id = var.host_project_id
-  # grant_network_role = var.grant_network_role
 
-  # shared_vpc = var.host_project_id
+  shared_vpc = module.host_project.project_id
   # shared_vpc_subnets = [
   #   "projects/${var.host_project_id}/regions/${var.region}/subnetworks/${var.name}-${var.env}-${terraform.workspace}",
   # ]
