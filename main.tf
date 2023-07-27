@@ -243,7 +243,7 @@ module "gke_deploy" {
       enable_gvnic              = false
       auto_repair               = true
       auto_upgrade              = true
-      service_account           = module.service_projects_apps.service_account_email
+      service_account           = module.service_projects_deploy.service_account_email
       preemptible               = false
       initial_node_count        = 1
     },
