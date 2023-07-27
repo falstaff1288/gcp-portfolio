@@ -42,7 +42,7 @@ module "host_project" {
   version = "~> 14.2"
 
   name                           = "${var.org_name}-net-${terraform.workspace}"
-  random_project_id              = false
+  random_project_id              = true
   org_id                         = var.organization
   folder_id                      = google_folder.shared_vpc_sub.name
   billing_account                = var.billing_account
@@ -63,7 +63,7 @@ module "service_projects_deploy" {
   version = "~> 14.2"
 
   name              = "${var.org_name}-deploy-${terraform.workspace}"
-  random_project_id = false
+  random_project_id = true
   org_id            = var.organization
   folder_id         = google_folder.deploy_sub.name
   billing_account      = var.billing_account
@@ -87,7 +87,7 @@ module "service_projects_apps" {
   version = "~> 14.2"
 
   name              = "${var.org_name}-apps-${terraform.workspace}"
-  random_project_id = false
+  random_project_id = true
   org_id            = var.organization
   folder_id         = google_folder.apps_sub.name
   billing_account      = var.billing_account
@@ -111,7 +111,7 @@ module "service_projects_ml" {
   version = "~> 14.2"
 
   name              = "${var.org_name}-ml-${terraform.workspace}"
-  random_project_id = false
+  random_project_id = true
   org_id            = var.organization
   folder_id         = google_folder.apps_sub.name
   billing_account      = var.billing_account
