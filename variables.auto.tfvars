@@ -28,11 +28,11 @@ subnet_secondary_apps = {
   dev = [ 
     {
       range_name    = "densnet-apps-01"
-      ip_cidr_range = "192.168.8.0/24"    
+      ip_cidr_range = "192.168.8.0/21"    
     },
     {
       range_name    = "densnet-apps-02"
-      ip_cidr_range = "192.168.16.0/24"
+      ip_cidr_range = "192.168.16.0/21"
     },
   ]
 }
@@ -41,11 +41,11 @@ subnet_secondary_ml = {
   dev = [ 
     {
       range_name    = "densnet-apps-01"
-      ip_cidr_range = "192.168.24.0/24"    
+      ip_cidr_range = "192.168.24.0/21"    
     },
     {
       range_name    = "densnet-apps-02"
-      ip_cidr_range = "192.168.32.0/24"
+      ip_cidr_range = "192.168.32.0/21"
     },
   ]
 }
@@ -54,11 +54,11 @@ subnet_secondary_deploy = {
   dev = [ 
     {
       range_name    = "densnet-deploy-01"
-      ip_cidr_range = "192.168.40.0/24"    
+      ip_cidr_range = "192.168.40.0/21"    
     },
     {
       range_name    = "densnet-deploy-02"
-      ip_cidr_range = "192.168.48.0/24"
+      ip_cidr_range = "192.168.48.0/21"
     },
   ]
 }
