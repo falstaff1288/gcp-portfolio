@@ -1,7 +1,3 @@
-variable "project" {
-  type = any
-}
-
 variable "region" {
   type = string
 }
@@ -26,10 +22,18 @@ variable "subnet_primary_ml" {
   type = any
 }
 
+variable "subnet_primary_deploy" {
+  type = any
+}
+
 variable "subnet_secondary_apps" {
   type = any
 }
 
 variable "subnet_secondary_ml" {
+  type = any
+}
+
+variable "subnet_secondary_deploy" {
   type = any
 }

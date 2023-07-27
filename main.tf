@@ -52,11 +52,36 @@ module "host_project" {
 
     activate_apis = [
     "compute.googleapis.com",
-    "cloudresourcemanager.googleapis.com"
+    "cloudresourcemanager.googleapis.com",
+    "container.googleapis.com"
   ]
 }
 
 #### TEAMS
+module "service_projects_deploy" {
+  source  = "terraform-google-modules/project-factory/google//modules/svpc_service_project"
+  version = "~> 14.2"
+
+  name              = "${var.org_name}-deploy-${terraform.workspace}"
+  random_project_id = true
+  org_id            = var.organization
+  folder_id         = google_folder.deploy_sub.name
+  billing_account      = var.billing_account
+
+  shared_vpc = module.host_project.project_id
+  shared_vpc_subnets = [
+    "projects/${module.host_project.project_id}/regions/${var.region}/subnetworks/${var.org_name}-deploy-${terraform.workspace}",
+  ]
+
+    activate_apis = [
+    "compute.googleapis.com",
+    "logging.googleapis.com",
+    "monitoring.googleapis.com",
+    "container.googleapis.com"
+  ]
+
+}
+
 module "service_projects_apps" {
   source  = "terraform-google-modules/project-factory/google//modules/svpc_service_project"
   version = "~> 14.2"
@@ -68,14 +93,15 @@ module "service_projects_apps" {
   billing_account      = var.billing_account
 
   shared_vpc = module.host_project.project_id
-  # shared_vpc_subnets = [
-  #   "projects/${var.host_project_id}/regions/${var.region}/subnetworks/${var.name}-${var.env}-${terraform.workspace}",
-  # ]
+  shared_vpc_subnets = [
+    "projects/${module.host_project.project_id}/regions/${var.region}/subnetworks/${var.org_name}-apps-${terraform.workspace}",
+  ]
 
     activate_apis = [
     "compute.googleapis.com",
     "logging.googleapis.com",
-    "monitoring.googleapis.com"
+    "monitoring.googleapis.com",
+    "container.googleapis.com"
   ]
 
 }
@@ -91,14 +117,15 @@ module "service_projects_ml" {
   billing_account      = var.billing_account
 
   shared_vpc = module.host_project.project_id
-  # shared_vpc_subnets = [
-  #   "projects/${var.host_project_id}/regions/${var.region}/subnetworks/${var.name}-${var.env}-${terraform.workspace}",
-  # ]
+  shared_vpc_subnets = [
+    "projects/${module.host_project.project_id}/regions/${var.region}/subnetworks/${var.org_name}-ml-${terraform.workspace}",
+  ]
 
     activate_apis = [
     "compute.googleapis.com",
     "logging.googleapis.com",
-    "monitoring.googleapis.com"
+    "monitoring.googleapis.com",
+    "container.googleapis.com"
   ]
 
 }
@@ -125,6 +152,12 @@ module "network_shared_vpc" {
       subnet_region = var.subnet_primary_ml[terraform.workspace].region
       description   = "subnet for applications (${var.org_name}-ml-${terraform.workspace})"
     },
+    {
+      subnet_name   = "${var.org_name}-deploy-${terraform.workspace}"
+      subnet_ip     = var.subnet_primary_deploy[terraform.workspace].ip
+      subnet_region = var.subnet_primary_deploy[terraform.workspace].region
+      description   = "subnet for applications (${var.org_name}-deploy-${terraform.workspace})"
+    },
 
 
   ]
@@ -132,6 +165,7 @@ module "network_shared_vpc" {
   secondary_ranges = {
     "densnet-apps-${terraform.workspace}" = var.subnet_secondary_apps[terraform.workspace]
     "densnet-ml-${terraform.workspace}" = var.subnet_secondary_ml[terraform.workspace]
+    "densnet-deploy-${terraform.workspace}" = var.subnet_secondary_deploy[terraform.workspace]
   }
 
 }
@@ -158,94 +192,103 @@ module "cloud_router" {
   # }
 }
 
-# module "project_iam_bindings_apps" {
-#   source = "terraform-google-modules/iam/google//modules/projects_iam"
-#   projects          = [module.service_projects_apps.project_id]
-#   mode             = "additive"
+### GKE
+data "google_client_config" "default" {}
 
-#   bindings = {
-#     "roles/monitoring.metricWriter" = [
-#       "serviceAccount:${module.service_projects_apps.service_account_email}",
-#     ]
-#     "roles/logging.logWriter" = [
-#       "serviceAccount:${module.service_projects_apps.service_account_email}",
-#     ]
-#   }
-# }
+provider "kubernetes" {
+  host                   = "https://${module.gke_deploy.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(module.gke_deploy.ca_certificate)
+}
 
-# module "project_iam_bindings_ml" {
-#   source = "terraform-google-modules/iam/google//modules/projects_iam"
-#   projects          = [module.service_projects_ml.project_id]
-#   mode             = "additive"
+module "gke_deploy" {
+  source                     = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
+  project_id                 = module.service_projects_deploy.project_id
+  name                       = "gke-deploy-1"
+  # region                     = "us-central1"
+  regional = false
+  zones                      = ["us-central1-a", "us-central1-b", "us-central1-f"]
+  network                    = module.network_shared_vpc.network_name
+  network_project_id         = module.host_project.project_id
+  subnetwork                 = "densnet-deploy-dev"
+  ip_range_pods              = "densnet-deploy-01"
+  ip_range_services          = "densnet-deploy-02"
+  master_authorized_networks = [
+    {
+      display_name = "allow-all"
+      cidr_block = "0.0.0.0/0"
+    }
+  ]
+  http_load_balancing        = false
+  network_policy             = false
+  horizontal_pod_autoscaling = true
+  filestore_csi_driver       = false
+  enable_private_endpoint    = true
+  enable_private_nodes       = true
+  # master_ipv4_cidr_block     = "10.0.0.0/28"
 
-#   bindings = {
-#     "roles/monitoring.metricWriter" = [
-#       "serviceAccount:${module.service_projects_ml.service_account_email}",
-#     ]
-#     "roles/logging.logWriter" = [
-#       "serviceAccount:${module.service_projects_ml.service_account_email}",
-#     ]
-#   }
-# }
+  node_pools = [
+    {
+      name                      = "general-nodepool01"
+      machine_type              = "e2-medium"
+      node_locations            = "us-central1-a,us-central1-b,us-central1-c"
+      min_count                 = 1
+      max_count                 = 1
+      local_ssd_count           = 0
+      spot                      = true
+      disk_size_gb              = 100
+      disk_type                 = "pd-standard"
+      image_type                = "COS_CONTAINERD"
+      enable_gcfs               = false
+      enable_gvnic              = false
+      auto_repair               = true
+      auto_upgrade              = true
+      service_account           = module.service_projects_apps.service_account_email
+      preemptible               = false
+      initial_node_count        = 1
+    },
+  ]
 
-# module "core" {
-#   source = "./modules/core"
+  node_pools_oauth_scopes = {
+    all = [
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
+  }
 
-#   # service_projects = var.service_projects[terraform.workspace]
-#   # region = var.region
-#   organization = var.organization
+  node_pools_labels = {
+    all = {}
 
-# }
+    general-nodepool01 = {
+      hello = "moto"
+    }
+  }
 
-# module "shared_vpc" {
-#   source          = "./modules/shared_vpc"
-#   billing_account = var.billing_account
-#   organization    = var.organization
-#   region          = var.region
-#   project         = var.project[terraform.workspace]
-#   folder_id       = module.core.folder_shared_vpc_sub_name
-#   name            = var.name
-#   grant_network_role = false
-#   # cloud_router_name = "cloud-router-${var.projects.app[terraform.workspace]}"
-# }
+  # node_pools_metadata = {
+  #   all = {}
 
-# # module "project_densnet_deploy" {
-# #   source = "./modules/projects"
+  #   default-node-pool = {
+  #     node-pool-metadata-custom-value = "my-node-pool"
+  #   }
+  # }
 
-# #   name            = var.name
-# #   env             = "deploy"
-# #   organization    = var.organization
-# #   project         = var.project[terraform.workspace]
-# #   folder_id       = module.core.folder_deploy_sub_name
-# #   billing_account = var.billing_account
-# #   host_project_id = module.shared_vpc.host_project_id
-# #   grant_network_role = true
+  # node_pools_taints = {
+  #   all = []
 
-# # }
+  #   default-node-pool = [
+  #     {
+  #       key    = "default-node-pool"
+  #       value  = true
+  #       effect = "PREFER_NO_SCHEDULE"
+  #     },
+  #   ]
+  # }
 
-# module "project_densnet_app" {
-#   source = "./modules/projects"
+  # node_pools_tags = {
+  #   all = []
 
-#   name            = var.name
-#   env             = "apps"
-#   organization    = var.organization
-#   project         = var.project[terraform.workspace]
-#   folder_id       = module.core.folder_apps_sub_name
-#   billing_account = var.billing_account
-#   host_project_id = module.shared_vpc.host_project_id
-#   grant_network_role = true
-# }
-
-# module "project_densnet_ml" {
-#   source = "./modules/projects"
-
-#   name            = var.name
-#   env             = "ml"
-#   organization    = var.organization
-#   project         = var.project[terraform.workspace]
-#   folder_id       = module.core.folder_apps_sub_name
-#   billing_account = var.billing_account
-#   host_project_id = module.shared_vpc.host_project_id
-#   grant_network_role = true
-
-# }
+  #   default-node-pool = [
+  #     "default-node-pool",
+  #   ]
+  # }
+}
