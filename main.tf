@@ -44,7 +44,7 @@ module "host_project" {
   name                           = "${var.org_name}-net-${terraform.workspace}"
   random_project_id              = true
   org_id                         = var.organization
-  folder_id                      = "organization/${var.organization}"
+  folder_id                      = "organizations/${var.organization}"
   billing_account                = var.billing_account
   enable_shared_vpc_host_project = true
   lien = false
